@@ -13,6 +13,17 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    // Global black status bar
+    CGFloat width = self.window.frame.size.width;
+    UIView *statusBar = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, 22)];
+    statusBar.backgroundColor = [UIColor colorWithWhite:0.1 alpha:1.0];
+
+    [self.window.rootViewController.view addSubview:statusBar];
+    
+    // Global navigation bar font
+    [[UINavigationBar appearance] setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"AvenirNext-Medium" size:16.0]}];
+    
     return YES;
 }
 							
