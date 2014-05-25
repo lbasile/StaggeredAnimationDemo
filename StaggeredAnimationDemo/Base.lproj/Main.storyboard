@@ -291,12 +291,21 @@
                                     <constraint firstAttribute="bottom" secondItem="UEy-pN-Vg8" secondAttribute="bottom" id="lTy-yh-eKW"/>
                                     <constraint firstItem="UEy-pN-Vg8" firstAttribute="leading" secondItem="Eg2-ck-zgr" secondAttribute="leading" id="vW8-CH-sBd"/>
                                 </constraints>
+                                <connections>
+                                    <outlet property="delegate" destination="kkw-02-fyq" id="DUg-H0-3Dl"/>
+                                </connections>
                             </scrollView>
                             <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="wlM-1h-UJV">
-                                <rect key="frame" x="461" y="531" width="39" height="37"/>
+                                <rect key="frame" x="436" y="531" width="89" height="37"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="89" id="lTz-5o-zaG"/>
+                                </constraints>
                                 <color key="pageIndicatorTintColor" white="0.70000000000000007" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="currentPageIndicatorTintColor" white="0.10000000000000001" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <action selector="userDidPage:" destination="kkw-02-fyq" eventType="valueChanged" id="3zA-qo-OJb"/>
+                                </connections>
                             </pageControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -316,6 +325,10 @@
                     <navigationItem key="navigationItem" id="Ibx-tY-VhC"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="960" height="568"/>
+                    <connections>
+                        <outlet property="pager" destination="wlM-1h-UJV" id="LeF-Tx-H99"/>
+                        <outlet property="scrollView" destination="Eg2-ck-zgr" id="gcu-1E-Sfu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="HB9-D0-By7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

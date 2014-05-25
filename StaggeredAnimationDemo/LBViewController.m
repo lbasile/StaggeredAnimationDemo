@@ -8,7 +8,9 @@
 
 #import "LBViewController.h"
 
-@interface LBViewController ()
+@interface LBViewController () <UIScrollViewDelegate>
+@property (weak, nonatomic) IBOutlet UIScrollView *scrollView;
+@property (weak, nonatomic) IBOutlet UIPageControl *pager;
 
 @end
 
@@ -25,6 +27,26 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark Actions
+
+- (IBAction)userDidPage:(id)sender
+{
+    NSInteger page = self.pager.currentPage;
+    CGFloat width = self.scrollView.bounds.size.width;
+    
+    [self.scrollView setContentOffset:CGPointMake(page*width, 0) animated:YES];
+}
+
+#pragma mark UIScrollViewDelegate
+
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    CGFloat x = scrollView.contentOffset.x;
+    CGFloat width = scrollView.bounds.size.width;
+    
+    self.pager.currentPage = x/width;
 }
 
 @end
