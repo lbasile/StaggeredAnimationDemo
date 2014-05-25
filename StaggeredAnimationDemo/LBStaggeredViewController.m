@@ -43,18 +43,25 @@
 
 #pragma mark Private
 
+// When transitioning to become the visible VC on screen, the
+// main view should transition in from transparent to opaque.
+// Regardless if coming from the right or the left.
 - (void)changeOpacity
 {
     CGPoint offsetInWindow = [self offsetInWindow];
-    CGFloat x = abs(abs(offsetInWindow.x) - [self width]);
-
-    CGFloat alpha;
-    // divide by 0 is bad.
-    if (x == 0) {
-        alpha = 1;
-    } else {
-        alpha = x / [self width];
-    }
+    
+    // From the right side: an offset.x of 320 (width of an iphone) means the alpha
+    // should be completely transparent (0). More values:
+    // Offset = 240, alpha = 0.25
+    // Offset = 160, alpha = 0.5
+    // Offset = 80, alpha = 0.75
+    // Offset = 0, alpha = 1
+    // Same is true from the left side: offset = -320, alpha = 0
+    // Since the effect is mirrored we can take abs(offset).
+    //
+    // Converting 320..0 to 0..1 can use this formula:
+    // s..e to 0..1: (value-s)/(e-s)
+    CGFloat alpha = (abs(offsetInWindow.x) - [self width]) / (0 - [self width]);
     
     self.view.alpha = alpha;
 }
