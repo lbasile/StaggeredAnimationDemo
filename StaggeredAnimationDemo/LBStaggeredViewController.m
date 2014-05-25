@@ -35,11 +35,29 @@
         return;
     }
     
+    [self changeOpacity];
+    
     CGPoint offsetInWindow = [self offsetInWindow];
     NSLog(@"(%0f, %0f)", offsetInWindow.x, offsetInWindow.y);
 }
 
 #pragma mark Private
+
+- (void)changeOpacity
+{
+    CGPoint offsetInWindow = [self offsetInWindow];
+    CGFloat x = abs(abs(offsetInWindow.x) - [self width]);
+
+    CGFloat alpha;
+    // divide by 0 is bad.
+    if (x == 0) {
+        alpha = 1;
+    } else {
+        alpha = x / [self width];
+    }
+    
+    self.view.alpha = alpha;
+}
 
 - (CGPoint)offsetInWindow
 {
