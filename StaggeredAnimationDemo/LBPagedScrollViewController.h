@@ -1,5 +1,5 @@
 //
-//  LBViewController.h
+//  LBPagedScrollViewController.h
 //  StaggeredAnimationDemo
 //
 //  Created by Louis Basile on 5/21/14.
@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface LBViewController : UIViewController
+@interface LBPagedScrollViewController : UIViewController
 
 @end
