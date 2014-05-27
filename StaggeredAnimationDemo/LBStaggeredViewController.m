@@ -9,7 +9,7 @@
 #import "LBStaggeredViewController.h"
 
 @interface LBStaggeredViewController ()
-
+@property (nonatomic, copy) NSMapTable *subviewsWithVelocities;
 @end
 
 @implementation LBStaggeredViewController
@@ -17,7 +17,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+
+    [self setupSubviewsWithVelocities];
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,6 +37,7 @@
     }
     
     [self changeOpacity];
+    [self staggerViewPositions];
     
     CGPoint offsetInWindow = [self offsetInWindow];
     NSLog(@"(%0f, %0f)", offsetInWindow.x, offsetInWindow.y);
@@ -43,9 +45,58 @@
 
 #pragma mark Private
 
-// When transitioning to become the visible VC on screen, the
-// main view should transition in from transparent to opaque.
-// Regardless if coming from the right or the left.
+- (void)setupSubviewsWithVelocities
+{
+    self.subviewsWithVelocities = [NSMapTable strongToStrongObjectsMapTable];
+    
+    for (UIView *view in [self.view subviews]) {
+        CGFloat velocity = [self velocityForView:view];
+        [self.subviewsWithVelocities setObject:@(velocity) forKey:view];
+    }
+}
+
+// Animates subviews in based on the scroll direction, but does it "staggered".
+// The closer to the top, the less distance the view will travel. A view at the
+// very top will travel 1x the distance/speed it normally would.
+//
+// The closer to the bottom, the more distance the view will travel. A view at
+// the very bottom will travel 3x the distance/speed as it normally would.
+- (void)staggerViewPositions
+{
+    // TODO: CRAZY MAGIC.
+    for (UIView *view in [self.view subviews]) {
+        CGRect frame = view.frame;
+        NSNumber *velocity = [self.subviewsWithVelocities objectForKey:view];
+        frame.origin.x *= [velocity floatValue];
+        view.frame = frame;
+    }
+}
+
+- (CGFloat)velocityForView:(UIView *)view
+{
+    // 0..yMaxHeight to 0%..100%: y/height
+    CGFloat yPercent = view.frame.origin.y/[self height];
+    
+    // yPercent Range = (0..1)
+    // velocity Range = (1..3)
+    // Conversion formula:
+    // ** OldRange = (OldMax - OldMin)
+    // ** NewRange = (NewMax - NewMin)
+    // ** NewValue = (((OldValue - OldMin) * NewRange) / OldRange) + NewMin
+    //
+    // Velocity = ((OldValue - 0) * NewRange / 1) + NewMin
+    // Simplifying: Velocity = OldValue * NewRange + 1
+    NSInteger velocityMin = 1;
+    NSInteger velocityMax = 3;
+    CGFloat velocityRange = velocityMax-velocityMin;
+    CGFloat velocity = yPercent * velocityRange + velocityMin;
+    
+    return velocity;
+}
+
+// The farther away being centered on screen, the more transparent the view
+// should be. This way transitioning "in" (from either side) goes from transparent
+// to opaque.
 - (void)changeOpacity
 {
     CGPoint offsetInWindow = [self offsetInWindow];
@@ -84,6 +135,11 @@
 - (CGFloat)width
 {
     return self.view.bounds.size.width;
+}
+
+- (CGFloat)height
+{
+    return self.view.bounds.size.height;
 }
 
 @end
